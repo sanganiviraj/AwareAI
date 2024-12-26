@@ -107,6 +107,7 @@ const HomeScreen = () => {
         style={{
           width: '80%',
           padding: 10,
+
           borderWidth: 1,
           borderRadius: 5,
           marginVertical: 10,
