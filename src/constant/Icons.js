@@ -39,4 +39,4 @@ const Icon = ({ type, name, color, size = 24, style }) => {
     )
 }
 
-export default Icon
+export default Icon;
