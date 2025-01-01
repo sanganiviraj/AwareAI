@@ -1,5 +1,5 @@
 export const fonts = {
-  regular: 'Poppins-Regular.ttf',
-  semibold: 'Poppins-SemiBold.ttf',
-  medium: 'Poppins-Medium.ttf',
+  regular: 'Poppins-Regular',
+  semibold: 'Poppins-SemiBold',
+  medium: 'Poppins-Medium',
 };

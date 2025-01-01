@@ -6,23 +6,43 @@ import {
   Text,
   TouchableOpacity,
   View,
+  TouchableWithoutFeedback,
+  Animated,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Colors} from '../common/Colors';
 import {ms, s, vs} from 'react-native-size-matters';
 import {fonts} from '../common/Fonts';
 import {images} from '../common/Images';
 import Icon, {Icons} from '../constant/Icons';
-import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 
 const ProductsScreen = () => {
-  const [visible, setVisible] = useState(true);
+  const [visible, setVisible] = useState(false);
   const array = [
     'Himalaya Gentle Daily Care Protein Shampoo',
     'Scalpe Anti Hairfall Shampoo',
     'Himalaya Gentle Daily Care Protein Shampoo',
     'Scalpe Anti Hairfall Shampoo',
   ];
+  const slideAnim = useRef(new Animated.Value(1)).current; // Initialize off-screen
+
+  useEffect(() => {
+    if (visible) {
+      // Slide in the modal
+      Animated.timing(slideAnim, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
+    } else {
+      // Slide out the modal
+      Animated.timing(slideAnim, {
+        toValue: 1000, // Move back off-screen
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
+    }
+  }, [visible]);
 
   const handleCloseModal = () => {
     setVisible(false);
@@ -40,49 +60,61 @@ const ProductsScreen = () => {
           </View>
           <Image source={images.man} />
         </View>
+
         <View style={styles.productsconatiner}>
           <View style={styles.sliderbox}>
             <Image source={images.sliderimg} style={styles.sliderimg} />
           </View>
-          <View style={styles.scanningbox}>
-            <TouchableOpacity style={styles.scanbtn}>
+
+          <TouchableOpacity
+            style={styles.scanningbox}
+            activeOpacity={0.8}
+            onPress={() => {
+              setVisible(true);
+            }}>
+            <View style={styles.scanbtn}>
               <Icon
                 type={Icons.MaterialCommunityIcons}
                 name="line-scan"
                 color={'#1A324D'}
                 size={25}
               />
-            </TouchableOpacity>
+            </View>
             <View style={{alignSelf: 'center', marginHorizontal: 'auto'}}>
               <Text style={styles.txtscan}>Use AI to Scan your Product</Text>
             </View>
-            <TouchableOpacity style={styles.frwdbtn}>
+            <View style={styles.frwdbtn}>
               <Image source={images.forward} style={styles.forwardbtnimg} />
-            </TouchableOpacity>
-          </View>
+            </View>
+          </TouchableOpacity>
 
-          <Modal visible={visible} transparent={true} animationType="slide">
+          <Modal visible={visible} transparent={true} animationType="none">
             <TouchableWithoutFeedback
               onPress={() => {
                 console.log('Tapped outside, closing modal');
                 handleCloseModal();
-              }}></TouchableWithoutFeedback>
+              }}>
+              <View style={styles.overlay}>
+                <Animated.View
+                  style={[
+                    styles.modalview,
+                    {transform: [{translateY: slideAnim}]},
+                  ]}>
+                  <View style={styles.modalbox}>
+                    <TouchableOpacity
+                      style={[styles.btncamera, {marginBottom: vs(15)}]}>
+                      <Text style={styles.txtmodal}>Use Camera</Text>
+                      <Image source={images.camera} style={styles.imgcamera} />
+                    </TouchableOpacity>
 
-            <View style={styles.overlay}>
-              <View style={styles.modalview}>
-                <View style={styles.modalbox}>
-                  <TouchableOpacity
-                    style={[styles.btncamera, {marginBottom: vs(15)}]}>
-                    <Text style={styles.txtmodal}>Use Camera</Text>
-                    <Image source={images.camera} style={styles.imgcamera} />
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.btncamera}>
-                    <Text style={styles.txtmodal}>Pick From Gallery</Text>
-                    <Image source={images.gallery} style={styles.imgcamera} />
-                  </TouchableOpacity>
-                </View>
+                    <TouchableOpacity style={styles.btncamera}>
+                      <Text style={styles.txtmodal}>Pick From Gallery</Text>
+                      <Image source={images.gallery} style={styles.imgcamera} />
+                    </TouchableOpacity>
+                  </View>
+                </Animated.View>
               </View>
-            </View>
+            </TouchableWithoutFeedback>
           </Modal>
 
           <View style={styles.prodcutlistview}>
@@ -156,20 +188,11 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   overlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
     flex: 1,
     justifyContent: 'flex-end',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalview: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
     backgroundColor: 'white',
     borderTopLeftRadius: ms(25),
     borderTopRightRadius: ms(25),
@@ -178,7 +201,6 @@ const styles = StyleSheet.create({
     elevation: 10,
   },
   modalbox: {
-    // alignItems: 'center',
     justifyContent: 'center',
   },
   btncamera: {
@@ -196,7 +218,6 @@ const styles = StyleSheet.create({
     fontSize: s(14.5),
   },
   imgcamera: {
-    // backgroundColor: 'red',
     marginLeft: s(8),
     height: vs(16),
     width: s(20),
