@@ -9,12 +9,12 @@ import {
   TouchableWithoutFeedback,
   Animated,
 } from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
-import {Colors} from '../common/Colors';
-import {ms, s, vs} from 'react-native-size-matters';
-import {fonts} from '../common/Fonts';
-import {images} from '../common/Images';
-import Icon, {Icons} from '../constant/Icons';
+import React, { useEffect, useRef, useState } from 'react';
+import { Colors } from '../constant/common/Colors';
+import { ms, s, vs } from 'react-native-size-matters';
+import { fonts } from '../constant/common/Fonts';
+import { images } from '../constant/common/Images';
+import Icon, { Icons } from '../constant/Icons';
 
 const ProductsScreen = () => {
   const [visible, setVisible] = useState(false);
@@ -80,7 +80,7 @@ const ProductsScreen = () => {
                 size={25}
               />
             </View>
-            <View style={{alignSelf: 'center', marginHorizontal: 'auto'}}>
+            <View style={{ alignSelf: 'center', marginHorizontal: 'auto' }}>
               <Text style={styles.txtscan}>Use AI to Scan your Product</Text>
             </View>
             <View style={styles.frwdbtn}>
@@ -98,11 +98,11 @@ const ProductsScreen = () => {
                 <Animated.View
                   style={[
                     styles.modalview,
-                    {transform: [{translateY: slideAnim}]},
+                    { transform: [{ translateY: slideAnim }] },
                   ]}>
                   <View style={styles.modalbox}>
                     <TouchableOpacity
-                      style={[styles.btncamera, {marginBottom: vs(15)}]}>
+                      style={[styles.btncamera, { marginBottom: vs(15) }]}>
                       <Text style={styles.txtmodal}>Use Camera</Text>
                       <Image source={images.camera} style={styles.imgcamera} />
                     </TouchableOpacity>
@@ -120,7 +120,7 @@ const ProductsScreen = () => {
           <View style={styles.prodcutlistview}>
             <View style={styles.titlebox}>
               <Text style={styles.producttitle}>Recent Products</Text>
-              <TouchableOpacity style={{flexDirection: 'row'}}>
+              <TouchableOpacity style={{ flexDirection: 'row' }}>
                 <Text style={styles.txtviewmore}>View more</Text>
                 <Image source={images.rightarrow} style={styles.rightarrow} />
               </TouchableOpacity>
@@ -133,7 +133,7 @@ const ProductsScreen = () => {
                       source={images.tshirt}
                       style={[
                         styles.productimg,
-                        {height: index % 2 !== 0 ? vs(160) : vs(95)},
+                        { height: index % 2 !== 0 ? vs(160) : vs(95) },
                       ]}
                     />
                     <View style={styles.productnamebox}>

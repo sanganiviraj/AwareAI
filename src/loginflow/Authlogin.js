@@ -1,23 +1,23 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
-import StepProgress from '../components/StepProgress'
+import { Button, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import { horizontalScale, moderateScale } from '../constant/Metrics'
 
 const Authlogin = ({ navigation }) => {
-    
+
     return (
         <View style={styles.screen} >
-            <StepProgress navigation={navigation} />
+
         </View>
     )
 }
 
-export default Authlogin
+export default Authlogin;
 
 const styles = StyleSheet.create({
     screen: {
         flex: 1,
-        backgroundColor: "white"
+        backgroundColor: "white",
+        paddingHorizontal: horizontalScale(20)
     },
     buttonview: {
         flexDirection: "row",
