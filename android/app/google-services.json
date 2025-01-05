@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "732124332207",
+    "project_id": "awareai-1c42d",
+    "storage_bucket": "awareai-1c42d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:732124332207:android:f1b85d019703ae7e83d45a",
+        "android_client_info": {
+          "package_name": "com.awareai"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "732124332207-eabm405qvu2ek5li6aln89h81m38lc09.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.awareai",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "732124332207-ds9q92f1ide7k6tuq44bd1rlbfauaj99.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB7WILPORFu_BiN262safQJJm7p5Kwvw04"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "732124332207-ds9q92f1ide7k6tuq44bd1rlbfauaj99.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
