@@ -12,31 +12,34 @@ import Octicons from 'react-native-vector-icons/Octicons';
 import Foundation from 'react-native-vector-icons/Foundation';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 
+// Define a mapping of icon types
 export const Icons = {
-    MaterialCommunityIcons,
-    MaterialIcons,
-    Ionicons,
-    Feather,
-    FontAwesome,
-    FontAwesome5,
-    AntDesign,
-    Entypo,
-    SimpleLineIcons,
-    Octicons,
-    Foundation,
-    EvilIcons,
+  MaterialCommunityIcons,
+  MaterialIcons,
+  Ionicons,
+  Feather,
+  FontAwesome,
+  FontAwesome5,
+  AntDesign,
+  Entypo,
+  SimpleLineIcons,
+  Octicons,
+  Foundation,
+  EvilIcons,
+};
+
+interface IconProps {
+  type: keyof typeof Icons; // Restrict to the keys of the `Icons` object
+  name: string;
+  color?: string; // Make `color` optional
+  size?: number; // Make `size` optional
+  style?: object; // Optional style object
 }
 
-const Icon = ({ type, name, color, size = 24, style }) => {
-    const fontSize = 24;
-    const Tag = type;
-    return (
-        <>
-            {type && name && (
-                <Tag name={name} size={size || fontSize} color={color} style={style} />
-            )}
-        </>
-    )
-}
+const Icon: React.FC<IconProps> = ({ type, name, color = 'black', size = 24, style }) => {
+  const Tag = Icons[type];
+
+  return Tag ? <Tag name={name} size={size} color={color} style={style} /> : null;
+};
 
 export default Icon;

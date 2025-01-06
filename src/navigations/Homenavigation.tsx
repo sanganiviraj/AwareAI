@@ -1,12 +1,18 @@
-import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import HomeScreen from '../Homeflow/HomeScreen';
 import {HomeSc, ProductsSc} from '../constant/Constants';
 import ProductsScreen from '../Homeflow/ProductsScreen';
 
+export type HomeStackParamslist = {
+  ProducstsScreen : undefined,
+  HomeScreen : undefined
+}
+
+const Stack = createStackNavigator<HomeStackParamslist>();
+
+
 const Homenavigation = () => {
-  const Stack = createStackNavigator();
   return (
     <Stack.Navigator
       screenOptions={{
@@ -20,4 +26,3 @@ const Homenavigation = () => {
 
 export default Homenavigation;
 
-const styles = StyleSheet.create({});

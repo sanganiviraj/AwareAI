@@ -1,4 +1,4 @@
-export const Colors = {
+export const Colors:Record<string,any> = {
   lightvblue: '#EDF3FB',
   white: '#FFFCFC',
   darkblue: '#1A324D',
