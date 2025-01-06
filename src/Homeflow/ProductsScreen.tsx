@@ -1,4 +1,6 @@
+import React, { useEffect, useRef, useState } from 'react';
 import {
+  Animated,
   Image,
   Modal,
   ScrollView,
@@ -7,23 +9,28 @@ import {
   TouchableOpacity,
   View,
   TouchableWithoutFeedback,
-  Animated,
 } from 'react-native';
-import React, { useEffect, useRef, useState } from 'react';
 import { Colors } from '../constant/common/Colors';
 import { ms, s, vs } from 'react-native-size-matters';
 import { fonts } from '../constant/common/Fonts';
 import { images } from '../constant/common/Images';
-import Icon, { Icons } from '../constant/Icons';
+import Icon from '../constant/Icons';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { HomeStackParamslist } from '../navigations/Homenavigation';
 
-const ProductsScreen = () => {
-  const [visible, setVisible] = useState(false);
-  const array = [
+interface ProductScreen {
+  navigation: StackNavigationProp<HomeStackParamslist, 'ProducstsScreen'>;
+}
+
+const ProductsScreen: React.FC<ProductScreen> = ({navigation}) => {
+  const [visible, setVisible] = useState<boolean>(false);
+  const array: string[] = [
     'Himalaya Gentle Daily Care Protein Shampoo',
     'Scalpe Anti Hairfall Shampoo',
     'Himalaya Gentle Daily Care Protein Shampoo',
     'Scalpe Anti Hairfall Shampoo',
   ];
+
   const slideAnim = useRef(new Animated.Value(1)).current; // Initialize off-screen
 
   useEffect(() => {
@@ -42,9 +49,9 @@ const ProductsScreen = () => {
         useNativeDriver: true,
       }).start();
     }
-  }, [visible]);
+  }, [slideAnim, visible]);
 
-  const handleCloseModal = () => {
+  const handleCloseModal = (): void => {
     setVisible(false);
   };
 
@@ -55,7 +62,7 @@ const ProductsScreen = () => {
           <View>
             <Text style={styles.username}>Hi, Jayesh</Text>
             <Text style={styles.greeting}>
-              Good Morning , How can I help you ?
+              Good Morning, How can I help you?
             </Text>
           </View>
           <Image source={images.man} />
@@ -69,14 +76,12 @@ const ProductsScreen = () => {
           <TouchableOpacity
             style={styles.scanningbox}
             activeOpacity={0.8}
-            onPress={() => {
-              setVisible(true);
-            }}>
+            onPress={() => setVisible(true)}>
             <View style={styles.scanbtn}>
               <Icon
-                type={Icons.MaterialCommunityIcons}
+                type={'MaterialCommunityIcons'}
                 name="line-scan"
-                color={'#1A324D'}
+                color="#1A324D"
                 size={25}
               />
             </View>
@@ -126,24 +131,22 @@ const ProductsScreen = () => {
               </TouchableOpacity>
             </View>
             <View style={styles.prdctconatainer}>
-              {array.map((value, index) => {
-                return (
-                  <View key={index} style={styles.productbox}>
-                    <Image
-                      source={images.tshirt}
-                      style={[
-                        styles.productimg,
-                        { height: index % 2 !== 0 ? vs(160) : vs(95) },
-                      ]}
-                    />
-                    <View style={styles.productnamebox}>
-                      <Text numberOfLines={3} style={styles.productxt}>
-                        {value}
-                      </Text>
-                    </View>
+              {array.map((value, index) => (
+                <View key={index} style={styles.productbox}>
+                  <Image
+                    source={images.tshirt}
+                    style={[
+                      styles.productimg,
+                      { height: index % 2 !== 0 ? vs(160) : vs(95) },
+                    ]}
+                  />
+                  <View style={styles.productnamebox}>
+                    <Text numberOfLines={3} style={styles.productxt}>
+                      {value}
+                    </Text>
                   </View>
-                );
-              })}
+                </View>
+              ))}
             </View>
           </View>
         </View>
@@ -258,7 +261,6 @@ const styles = StyleSheet.create({
     width: s(15),
     resizeMode: 'contain',
   },
-
   prodcutlistview: {
     flex: 1,
   },

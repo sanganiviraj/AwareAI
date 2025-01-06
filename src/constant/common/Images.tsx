@@ -1,4 +1,4 @@
-export const images = {
+export const images: Record<string, any> = {
   forward: require('../../assets/img/forward.png'),
   scan: require('../../assets/img/scan.png'),
   sliderimg: require('../../assets/img/sliderimg.png'),
