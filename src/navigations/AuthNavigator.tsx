@@ -6,6 +6,9 @@ import VerificationScreen from '../loginflow/VerificationScreen';
 
 export type AuthParamsList = {
   authlogin: undefined;
+  VerificationScreen : {
+    number : string,
+  }
 };
 
 const Stack = createStackNavigator<AuthParamsList>();

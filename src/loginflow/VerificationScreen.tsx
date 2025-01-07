@@ -1,27 +1,23 @@
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
 import Header from '../constant/common/Header';
 import ButtonWithText from '../constant/common/ButtonWithText';
-import {ms, s, vs} from 'react-native-size-matters';
-import {useNavigation, useRoute} from '@react-navigation/native';
-import {Colors} from '../constant/common/Colors';
-import {fonts} from '../constant/common/Fonts';
-import {OtpInput} from 'react-native-otp-entry';
+import { ms, s, vs } from 'react-native-size-matters';
+import { useRoute } from '@react-navigation/native';
+import { Colors } from '../constant/common/Colors';
+import { fonts } from '../constant/common/Fonts';
+import { OtpInput } from 'react-native-otp-entry';
 import auth from '@react-native-firebase/auth';
 
 const VerificationScreen = () => {
   const route = useRoute();
-  const {number} = route.params;
-  const navigation = useNavigation();
-  const [otp, setotp] = useState('');
-  const [confirm, setConfirm] = useState(null);
-
-  const [code, setCode] = useState('');
+  const { number } = route.params;
+  const [confirm, setConfirm] = useState<object>({});
   const [timeLeft, setTimeLeft] = useState(120);
 
   useEffect(() => {
     if (number) {
-      signInWithPhoneNumber('+91 815-302-2471');
+      signInWithPhoneNumber(`+91 ${number}`);
 
       const timerId = setInterval(() => {
         setTimeLeft(prevTime => {
@@ -40,26 +36,22 @@ const VerificationScreen = () => {
   const formatTime = (time: number) => {
     const minutes = Math.floor(time / 60);
     const seconds = time % 60;
-    return `${minutes < 10 ? '0' : ''}${minutes}:${
-      seconds < 10 ? '0' : ''
-    }${seconds}`;
+    return `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''
+      }${seconds}`;
   };
 
   const signInWithPhoneNumber = async (phoneNumber: string) => {
-    console.log('LLLLLL'); // This is correctly logged
-
     try {
       const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
-      console.log('{KKKK', confirmation); // Ensure that this is logged correctly
       setConfirm(confirmation); // Set the confirmation object in state
     } catch (error) {
       console.error('Error during phone number sign-in: ', error); // Log any error
     }
   };
 
-  const confirmCode = async () => {
+  const confirmCode = async (text: string) => {
     try {
-      await confirm.confirm(code);
+      await confirm.confirm(text);
       console.log('confim');
     } catch (error) {
       console.log('Invalid code.');
@@ -93,8 +85,7 @@ const VerificationScreen = () => {
         type="numeric"
         secureTextEntry={false}
         focusStickBlinkingDuration={500}
-        onTextChange={text => setotp(text)}
-        onFilled={() => confirmCode()}
+        onFilled={(text) => confirmCode(text)}
         textInputProps={{
           accessibilityLabel: 'One-Time Password',
         }}
@@ -174,7 +165,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000', // Shadow color
-    shadowOffset: {width: 0, height: 4}, // Position of the shadow
+    shadowOffset: { width: 0, height: 4 }, // Position of the shadow
     shadowOpacity: 0.1, // Transparency of the shadow
     shadowRadius: ms(6), // Blur radius of the shadow
     elevation: 5,
