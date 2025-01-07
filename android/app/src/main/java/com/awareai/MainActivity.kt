@@ -1,3 +1,4 @@
+
 package com.awareai
 
 import com.facebook.react.ReactActivity
