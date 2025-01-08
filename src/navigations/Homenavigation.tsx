@@ -11,7 +11,6 @@ export type HomeStackParamslist = {
 
 const Stack = createStackNavigator<HomeStackParamslist>();
 
-
 const Homenavigation = () => {
   return (
     <Stack.Navigator

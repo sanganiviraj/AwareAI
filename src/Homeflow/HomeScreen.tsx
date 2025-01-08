@@ -5,15 +5,11 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  TouchableOpacity,
   View,
-  FlatList,
 } from 'react-native';
 import axios from 'axios';
 import { launchCamera, ImagePickerResponse } from 'react-native-image-picker';
-import { useDispatch, useSelector } from 'react-redux';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { adduser, deleteuser } from '../slice/Userslice';
 import { HomeStackParamslist } from '../navigations/Homenavigation';
 import {
   horizontalScale,
@@ -26,21 +22,15 @@ interface HomeScreenProps {
   navigation: StackNavigationProp<HomeStackParamslist, 'HomeScreen'>;
 }
 
-interface User {
-  name: string;
-}
-
 const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
-  const [name, setName] = useState<string>('');
   const [imageUri, setImageUri] = useState<string | null>(null);
   const [userQuestion, setUserQuestion] = useState<string>('');
   const [productCategory, setProductCategory] = useState<string>('');
   const [response, setResponse] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const users = useSelector((state: any) => state.users.user);
-  const dispatch = useDispatch();
-
+  console.log("navigation  -> " ,navigation);
+  
   const pickImage = async () => {
     launchCamera(
       {
@@ -99,15 +89,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     }
   };
 
-  const renderUserItem = ({ item, index }: { item: User; index: number }) => (
-    <View style={styles.userListItem}>
-      <Text style={styles.userName}>{item.name}</Text>
-      <TouchableOpacity onPress={() => dispatch(deleteuser(index))}>
-        <Text style={styles.deleteText}>Delete</Text>
-      </TouchableOpacity>
-    </View>
-  );
-
   return (
     <View style={styles.container}>
       <Button title="Pick an image" onPress={pickImage} />
@@ -150,29 +131,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         </View>
       )}
 
-      <TextInput
-        style={styles.nameInput}
-        value={name}
-        onChangeText={setName}
-        placeholder="Enter a name"
-        placeholderTextColor="grey"
-      />
-
-      <TouchableOpacity
-        style={styles.submitButton}
-        onPress={() => dispatch(adduser({ name }))}>
-        <Text style={styles.submitButtonText}>Submit</Text>
-      </TouchableOpacity>
-
-      {users.length > 0 ? (
-        <FlatList
-          data={users}
-          renderItem={renderUserItem}
-          keyExtractor={(_, index) => index.toString()}
-        />
-      ) : (
-        <Text style={styles.noUsersText}>No users available</Text>
-      )}
     </View>
   );
 };

@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
     paddingLeft: s(5),
   },
   txtinput: {
-    color: Colors.darkgrey,
+    color: Colors.darkblue,
   },
   loginbox: {
     flexDirection: 'row',
