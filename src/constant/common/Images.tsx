@@ -7,4 +7,9 @@ export const images: Record<string, any> = {
   tshirt: require('../../assets/img/tshirt.jpg'),
   camera: require('../../assets/img/camera.png'),
   gallery: require('../../assets/img/gallery.png'),
+  backarrow: require('../../assets/img/arrow_back.png'),
+  uparrow: require('../../assets/img/up.png'),
+  downarrow: require('../../assets/img/down.png'),
+  favourite: require('../../assets/img/favorite.png'),
+  rightwhite: require('../../assets/img/rightwhite.png'),
 };

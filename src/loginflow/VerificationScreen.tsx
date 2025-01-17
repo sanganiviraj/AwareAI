@@ -9,7 +9,7 @@ import { fonts } from '../constant/common/Fonts';
 import { OtpInput } from 'react-native-otp-entry';
 import auth from '@react-native-firebase/auth';
 
-const VerificationScreen = () => {
+const VerificationScreen = ({ navigation }) => {
   const route = useRoute();
   const { number } = route.params;
   const [confirm, setConfirm] = useState<object>({});
@@ -53,6 +53,7 @@ const VerificationScreen = () => {
     try {
       await confirm.confirm(text);
       console.log('confim');
+      navigation.navigate("homenavigator")
     } catch (error) {
       console.log('Invalid code.');
     }

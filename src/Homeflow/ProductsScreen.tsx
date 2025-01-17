@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Animated,
   Image,
@@ -10,20 +10,23 @@ import {
   View,
   TouchableWithoutFeedback,
 } from 'react-native';
-import {Colors} from '../constant/common/Colors';
-import {ms, s, vs} from 'react-native-size-matters';
-import {fonts} from '../constant/common/Fonts';
-import {images} from '../constant/common/Images';
+import { Colors } from '../constant/common/Colors';
+import { ms, s, vs } from 'react-native-size-matters';
+import { fonts } from '../constant/common/Fonts';
+import { images } from '../constant/common/Images';
 import Icon from '../constant/Icons';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {HomeStackParamslist} from '../navigations/Homenavigation';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { HomeStackParamslist } from '../navigations/Homenavigation';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 
 interface ProductScreen {
   navigation: StackNavigationProp<HomeStackParamslist, 'ProducstsScreen'>;
 }
 
-const ProductsScreen: React.FC<ProductScreen> = ({navigation}) => {
+const ProductsScreen: React.FC<ProductScreen> = ({ navigation }) => {
   const [visible, setVisible] = useState<boolean>(false);
+  console.log("HII");
+
   const array: string[] = [
     'Himalaya Gentle Daily Care Protein Shampoo',
     'Scalpe Anti Hairfall Shampoo',
@@ -49,10 +52,52 @@ const ProductsScreen: React.FC<ProductScreen> = ({navigation}) => {
         useNativeDriver: true,
       }).start();
     }
-  }, [slideAnim, visible]);
+  }, [visible]);
 
   const handleCloseModal = (): void => {
     setVisible(false);
+  };
+
+  const pickImage = async () => {
+    launchCamera(
+      {
+        mediaType: 'photo',
+        includeBase64: true,
+        maxWidth: 600,
+        maxHeight: 600,
+      },
+      (response) => {
+        if (response.didCancel) {
+          console.log('User canceled image picker');
+        } else if (response.errorCode) {
+          console.error('ImagePicker Error:', response.errorMessage);
+        } else if (response.assets && response.assets.length > 0) {
+          setVisible(false);
+          navigation.navigate('HomeScreen', { imageUri: response.assets[0].uri });
+        }
+      }
+    );
+  };
+
+  const PickeImageFromGallery = async () => {
+    launchImageLibrary(
+      {
+        mediaType: 'photo',
+        includeBase64: true,
+        maxWidth: 600,
+        maxHeight: 600,
+      },
+      (response) => {
+        if (response.didCancel) {
+          console.log('User canceled image picker');
+        } else if (response.errorCode) {
+          console.error('ImagePicker Error:', response.errorMessage);
+        } else if (response.assets && response.assets.length > 0) {
+          setVisible(false);
+          navigation.navigate('HomeScreen', { imageUri: response.assets[0].uri });
+        }
+      }
+    )
   };
 
   return (
@@ -85,7 +130,7 @@ const ProductsScreen: React.FC<ProductScreen> = ({navigation}) => {
                 size={25}
               />
             </View>
-            <View style={{alignSelf: 'center', marginHorizontal: 'auto'}}>
+            <View style={{ alignSelf: 'center', marginHorizontal: 'auto' }}>
               <Text style={styles.txtscan}>Use AI to Scan your Product</Text>
             </View>
             <View style={styles.frwdbtn}>
@@ -103,16 +148,23 @@ const ProductsScreen: React.FC<ProductScreen> = ({navigation}) => {
                 <Animated.View
                   style={[
                     styles.modalview,
-                    {transform: [{translateY: slideAnim}]},
+                    { transform: [{ translateY: slideAnim }] },
                   ]}>
                   <View style={styles.modalbox}>
                     <TouchableOpacity
-                      style={[styles.btncamera, {marginBottom: vs(15)}]}>
+                      style={[styles.btncamera, { marginBottom: vs(15) }]}
+                      onPress={() => {
+                        pickImage()
+                      }}
+                    >
                       <Text style={styles.txtmodal}>Use Camera</Text>
                       <Image source={images.camera} style={styles.imgcamera} />
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.btncamera}>
+                    <TouchableOpacity
+                      style={styles.btncamera}
+                      onPress={() => { PickeImageFromGallery() }}
+                    >
                       <Text style={styles.txtmodal}>Pick From Gallery</Text>
                       <Image source={images.gallery} style={styles.imgcamera} />
                     </TouchableOpacity>
@@ -125,7 +177,7 @@ const ProductsScreen: React.FC<ProductScreen> = ({navigation}) => {
           <View style={styles.prodcutlistview}>
             <View style={styles.titlebox}>
               <Text style={styles.producttitle}>Recent Products</Text>
-              <TouchableOpacity style={{flexDirection: 'row'}}>
+              <TouchableOpacity style={{ flexDirection: 'row' }}>
                 <Text style={styles.txtviewmore}>View more</Text>
                 <Image source={images.rightarrow} style={styles.rightarrow} />
               </TouchableOpacity>
@@ -137,7 +189,7 @@ const ProductsScreen: React.FC<ProductScreen> = ({navigation}) => {
                     source={images.tshirt}
                     style={[
                       styles.productimg,
-                      {height: index % 2 !== 0 ? vs(160) : vs(95)},
+                      { height: index % 2 !== 0 ? vs(160) : vs(95) },
                     ]}
                   />
                   <View style={styles.productnamebox}>

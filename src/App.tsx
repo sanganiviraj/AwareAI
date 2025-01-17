@@ -10,12 +10,11 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { Colors } from './constant/common/Colors';
 
 export type RootStackParamsList = {
-  authnavigator : undefined,
-  homenavigator : undefined,
+  authnavigator: undefined,
+  homenavigator: undefined,
 };
 
 const Stack = createStackNavigator<RootStackParamsList>();
-
 
 const App = () => {
 
@@ -25,7 +24,7 @@ const App = () => {
         <NavigationContainer>
           <StatusBar backgroundColor={Colors.lightvblue} />
           <Stack.Navigator screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="authnavigator" component={AuthNavigator} />
+            {/* <Stack.Screen name="authnavigator" component={AuthNavigator} /> */}
             <Stack.Screen name="homenavigator" component={Homenavigation} />
           </Stack.Navigator>
         </NavigationContainer>

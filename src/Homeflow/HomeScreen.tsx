@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
 import {
-  Button,
   Image,
+  ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   View,
 } from 'react-native';
 import axios from 'axios';
-import { launchCamera, ImagePickerResponse } from 'react-native-image-picker';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { HomeStackParamslist } from '../navigations/Homenavigation';
 import {
@@ -17,48 +15,48 @@ import {
   screen,
   verticalScale,
 } from '../constant/Metrics';
+import { images } from '../constant/common/Images';
+import { fonts } from '../constant/common/Fonts';
+import { Colors } from '../constant/common/Colors';
+import { RouteProp } from '@react-navigation/native';
+import Ingredient from '../components/Ingredient';
+import Nutriention from '../components/Nutriention';
+import NutrientionGraph from '../components/NutrientionGraph';
+import LottieView from 'lottie-react-native';
+import { lottyAnim } from '../constant/common/Lottyanimation';
+import InputAnalyzer from '../components/InputAnalyzer';
 
 interface HomeScreenProps {
-  navigation: StackNavigationProp<HomeStackParamslist, 'HomeScreen'>;
+  navigation: StackNavigationProp<HomeStackParamslist, 'HomeScreen'>,
+  route: RouteProp<HomeStackParamslist, 'HomeScreen'>; // Add the route type
 }
 
-const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
-  const [imageUri, setImageUri] = useState<string | null>(null);
-  const [userQuestion, setUserQuestion] = useState<string>('');
-  const [productCategory, setProductCategory] = useState<string>('');
+type Item = {
+  label: string;
+  value: string;
+};
+
+const HomeScreen: React.FC<HomeScreenProps> = ({ route }) => {
+  let { imageUri } = route.params;
+  const [userquestion, setUserquestion] = useState<string>('');
+  const [items, setItems] = useState<Item[]>([
+    { label: 'Food', value: 'food' },
+    { label: 'Grocery', value: 'grocery' },
+  ]);
+  const [value, setValue] = useState<string>('');
   const [response, setResponse] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
-
-  console.log("navigation  -> " ,navigation);
-  
-  const pickImage = async () => {
-    launchCamera(
-      {
-        mediaType: 'photo',
-        includeBase64: true,
-        maxWidth: 600,
-        maxHeight: 600,
-      },
-      (response: ImagePickerResponse) => {
-        if (response.didCancel) {
-          console.log('User canceled image picker');
-        } else if (response.errorCode) {
-          console.error('ImagePicker Error:', response.errorMessage);
-        } else if (response.assets && response.assets.length > 0) {
-          setImageUri(response.assets[0].uri || null);
-        }
-      }
-    );
-  };
+  const [showAnimation, setShowAnimation] = useState<boolean>(false);
+  const [analyze, setAnalyze] = useState<boolean>(false);
 
   const handleAnalyze = async () => {
-    if (!imageUri || !productCategory) {
+    if (!imageUri || !value) {
       alert('Please upload an image and select a category');
       return;
     }
 
     setLoading(true);
-
+    setShowAnimation(true);
     try {
       const formData = new FormData();
       formData.append('image', {
@@ -66,8 +64,8 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         name: 'product-image.jpg',
         type: 'image/jpeg',
       } as any);
-      formData.append('userQuestion', userQuestion);
-      formData.append('category', productCategory);
+      formData.append('userQuestion', userquestion);
+      formData.append('category', value);
 
       const { data } = await axios.post(
         'https://nodewithcrud.onrender.com/analyze',
@@ -86,50 +84,88 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
       alert('An error occurred while analyzing the product.');
     } finally {
       setLoading(false);
+      setShowAnimation(false);
     }
   };
 
   return (
     <View style={styles.container}>
-      <Button title="Pick an image" onPress={pickImage} />
 
-      {imageUri && (
+      <View style={styles.headerContent}>
         <Image
-          source={{ uri: imageUri }}
-          style={styles.imagePreview}
+          style={styles.backbutton}
+          source={images.backarrow}
         />
-      )}
+        <Text style={styles.screenTitle}>
+          Product Review
+        </Text>
+      </View>
 
-      <TextInput
-        placeholder="Enter your question"
-        placeholderTextColor="black"
-        value={userQuestion}
-        onChangeText={setUserQuestion}
-        style={styles.input}
-      />
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={styles.scroll}
+      >
 
-      <TextInput
-        placeholder="Enter product category (grocery, skincare, etc.)"
-        placeholderTextColor="black"
-        value={productCategory}
-        onChangeText={setProductCategory}
-        style={styles.input}
-      />
+        {imageUri &&
+          (
+            <Image
+              source={{ uri: imageUri }}
+              style={styles.imagePreview}
+            />
+          )}
 
-      <Button
-        title="Analyze Product"
-        onPress={handleAnalyze}
-        disabled={loading}
-      />
+        {showAnimation &&
+          (
+            <LottieView
+              source={lottyAnim.scan}
+              style={styles.scananimation}
+              autoPlay loop />
+          )
+        }
 
-      {loading && <Text style={styles.loadingText}>Loading...</Text>}
+        {analyze ?
+          <View>
 
-      {response && (
-        <View style={styles.responseContainer}>
-          <Text>Analysis Result:</Text>
-          <Text>{JSON.stringify(response, null, 2)}</Text>
-        </View>
-      )}
+            {
+              response && <View style={styles.titlebox}>
+                <Text style={styles.productName}>
+                  {response.productName}
+                </Text>
+
+                <Image
+                  source={require('../assets/img/favorite.png')}
+                  style={styles.favorite}
+                />
+              </View>
+            }
+
+            <Ingredient ingredients={response && response.ingredients} />
+
+            <Nutriention nutrient={response && response.nutrientComposition} />
+
+            <NutrientionGraph nutrient={response && response.nutrientComposition} />
+
+          </View>
+          :
+          <View>
+
+            <InputAnalyzer
+              userquestion={userquestion}
+              setUserquestion={setUserquestion}
+              value={value}
+              setValue={setValue}
+              items={items}
+              setItems={setItems}
+              setAnalyze={setAnalyze}
+              handleAnalyze={handleAnalyze}
+            />
+
+          </View>
+        }
+
+        {loading && <Text style={styles.loadingText}>Loading...</Text>}
+
+      </ScrollView>
 
     </View>
   );
@@ -139,15 +175,29 @@ export default HomeScreen;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: 'white',
-    padding: 10,
+    width: screen.WIDTH,
+    height: screen.HEIGHT,
+    backgroundColor: Colors.lightvblue,
+    paddingHorizontal: horizontalScale(15),
+  },
+  scroll: {
+    width: '100%',
+    height: '100%',
   },
   imagePreview: {
-    width: 200,
-    height: 200,
-    marginVertical: 10,
+    width: '100%',
+    aspectRatio: 1.2, // Aspect ratio to maintain the proportionality
+    marginVertical: verticalScale(10),
+    borderRadius: 10,
     alignSelf: 'center',
+  },
+  scananimation: {
+    width: '100%',
+    aspectRatio: 1, // Aspect ratio to maintain the proportionality
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    left: 0,
   },
   input: {
     width: '80%',
@@ -157,58 +207,42 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     alignSelf: 'center',
   },
-  nameInput: {
-    borderColor: 'grey',
-    borderWidth: 1,
-    alignSelf: 'center',
-    width: (screen.WIDTH * 90) / 100,
-    padding: 10,
-    marginVertical: verticalScale(10),
-  },
-  submitButton: {
-    width: (screen.WIDTH * 35) / 100,
-    height: (screen.HEIGHT * 5) / 100,
-    backgroundColor: 'green',
-    borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    alignSelf: 'center',
-  },
-  submitButtonText: {
-    color: 'white',
-  },
-  userListItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: verticalScale(10),
-    paddingHorizontal: horizontalScale(15),
-    borderWidth: 1,
-    borderRadius: 5,
-    marginVertical: verticalScale(5),
-    alignSelf: 'center',
-    width: '90%',
-  },
-  userName: {
-    fontSize: moderateScale(14),
-    color: 'black',
-  },
-  deleteText: {
-    fontSize: moderateScale(14),
-    color: 'red',
-  },
-  noUsersText: {
-    fontSize: moderateScale(18),
-    color: 'black',
-    textAlign: 'center',
-    marginTop: verticalScale(20),
-  },
-  responseContainer: {
-    marginTop: 20,
-    paddingHorizontal: 10,
-  },
   loadingText: {
     textAlign: 'center',
     marginVertical: 10,
   },
+  headerContent: {
+    width: "100%",
+    paddingVertical: verticalScale(10),
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignSelf: 'center',
+    alignItems: 'center',
+  },
+  backbutton: {
+    width: 40,
+    height: 40,
+  },
+  screenTitle: {
+    fontSize: moderateScale(20),
+    fontFamily: fonts.medium,
+    color: Colors.darkblue,
+  },
+  productName: {
+    fontSize: moderateScale(20),
+    fontFamily: fonts.medium,
+    width: '80%',
+  },
+  titlebox: {
+    alignItems: 'center',
+    width: "100%",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: horizontalScale(5),
+    paddingVertical: verticalScale(10),
+  },
+  favorite: {
+    width: 40,
+    height: 40,
+  }
 });
