@@ -4,3 +4,4 @@ export const HomeSc = 'HomeScreen';
 export const SignupSc = 'SignUpScreen';
 export const VerificationSc = 'VerificationScreen';
 export const CaptureSc = 'CaptureImage';
+// her is nothingh
