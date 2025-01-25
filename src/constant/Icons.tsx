@@ -36,10 +36,18 @@ interface IconProps {
   style?: object; // Optional style object
 }
 
-const Icon: React.FC<IconProps> = ({ type, name, color = 'black', size = 24, style }) => {
+const Icon: React.FC<IconProps> = ({
+  type,
+  name,
+  color = 'black',
+  size = 24,
+  style,
+}) => {
   const Tag = Icons[type];
 
-  return Tag ? <Tag name={name} size={size} color={color} style={style} /> : null;
+  return Tag ? (
+    <Tag name={name} size={size} color={color} style={style} />
+  ) : null;
 };
 
 export default Icon;

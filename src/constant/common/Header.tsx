@@ -4,7 +4,11 @@ import {s, vs} from 'react-native-size-matters';
 import {Colors} from './Colors';
 import {fonts} from './Fonts';
 
-const Header = ({title}) => {
+interface HeaderProps {
+  title: string;
+}
+
+const Header: React.FC<HeaderProps> = ({title}) => {
   return (
     <View style={styles.header}>
       <Text style={styles.headertitle}>{title}</Text>

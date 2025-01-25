@@ -1,17 +1,17 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
 import Header from '../constant/common/Header';
 import ButtonWithText from '../constant/common/ButtonWithText';
-import { ms, s, vs } from 'react-native-size-matters';
-import { useRoute } from '@react-navigation/native';
-import { Colors } from '../constant/common/Colors';
-import { fonts } from '../constant/common/Fonts';
-import { OtpInput } from 'react-native-otp-entry';
+import {ms, s, vs} from 'react-native-size-matters';
+import {useRoute} from '@react-navigation/native';
+import {Colors} from '../constant/common/Colors';
+import {fonts} from '../constant/common/Fonts';
+import {OtpInput} from 'react-native-otp-entry';
 import auth from '@react-native-firebase/auth';
 
-const VerificationScreen = ({ navigation }) => {
+const VerificationScreen = ({navigation}) => {
   const route = useRoute();
-  const { number } = route.params;
+  const {number} = route.params;
   const [confirm, setConfirm] = useState<object>({});
   const [timeLeft, setTimeLeft] = useState(120);
 
@@ -36,8 +36,9 @@ const VerificationScreen = ({ navigation }) => {
   const formatTime = (time: number) => {
     const minutes = Math.floor(time / 60);
     const seconds = time % 60;
-    return `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''
-      }${seconds}`;
+    return `${minutes < 10 ? '0' : ''}${minutes}:${
+      seconds < 10 ? '0' : ''
+    }${seconds}`;
   };
 
   const signInWithPhoneNumber = async (phoneNumber: string) => {
@@ -53,7 +54,7 @@ const VerificationScreen = ({ navigation }) => {
     try {
       await confirm.confirm(text);
       console.log('confim');
-      navigation.navigate("homenavigator")
+      navigation.navigate('homenavigator');
     } catch (error) {
       console.log('Invalid code.');
     }
@@ -86,7 +87,7 @@ const VerificationScreen = ({ navigation }) => {
         type="numeric"
         secureTextEntry={false}
         focusStickBlinkingDuration={500}
-        onFilled={(text) => confirmCode(text)}
+        onFilled={text => confirmCode(text)}
         textInputProps={{
           accessibilityLabel: 'One-Time Password',
         }}
@@ -166,7 +167,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000', // Shadow color
-    shadowOffset: { width: 0, height: 4 }, // Position of the shadow
+    shadowOffset: {width: 0, height: 4}, // Position of the shadow
     shadowOpacity: 0.1, // Transparency of the shadow
     shadowRadius: ms(6), // Blur radius of the shadow
     elevation: 5,
