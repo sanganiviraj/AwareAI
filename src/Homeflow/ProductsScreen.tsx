@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   Animated,
   Image,
@@ -10,22 +10,24 @@ import {
   View,
   TouchableWithoutFeedback,
 } from 'react-native';
-import { Colors } from '../constant/common/Colors';
-import { ms, s, vs } from 'react-native-size-matters';
-import { fonts } from '../constant/common/Fonts';
-import { images } from '../constant/common/Images';
+import {Colors} from '../constant/common/Colors';
+import {ms, s, vs} from 'react-native-size-matters';
+import {fonts} from '../constant/common/Fonts';
+import {images} from '../constant/common/Images';
 import Icon from '../constant/Icons';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { HomeStackParamslist } from '../navigations/Homenavigation';
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {HomeStackParamslist} from '../navigations/Homenavigation';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import {HomeSc} from '../constant/Constants';
+import {PermissionsAndroid} from 'react-native';
 
 interface ProductScreen {
   navigation: StackNavigationProp<HomeStackParamslist, 'ProducstsScreen'>;
 }
 
-const ProductsScreen: React.FC<ProductScreen> = ({ navigation }) => {
+const ProductsScreen: React.FC<ProductScreen> = ({navigation}) => {
   const [visible, setVisible] = useState<boolean>(false);
-  console.log("HII");
+  console.log('HII');
 
   const array: string[] = [
     'Himalaya Gentle Daily Care Protein Shampoo',
@@ -52,10 +54,34 @@ const ProductsScreen: React.FC<ProductScreen> = ({ navigation }) => {
         useNativeDriver: true,
       }).start();
     }
-  }, [visible]);
+  }, [slideAnim, visible]);
 
   const handleCloseModal = (): void => {
     setVisible(false);
+  };
+
+  // Request camera permission
+  const requestCameraPermission = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        {
+          title: 'Camera Permission',
+          message: 'This app needs access to your camera.',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('Camera permission granted');
+        pickImage();
+      } else {
+        console.log('Camera permission denied');
+      }
+    } catch (err) {
+      console.warn(err);
+    }
   };
 
   const pickImage = async () => {
@@ -66,16 +92,16 @@ const ProductsScreen: React.FC<ProductScreen> = ({ navigation }) => {
         maxWidth: 600,
         maxHeight: 600,
       },
-      (response) => {
+      response => {
         if (response.didCancel) {
           console.log('User canceled image picker');
         } else if (response.errorCode) {
           console.error('ImagePicker Error:', response.errorMessage);
         } else if (response.assets && response.assets.length > 0) {
           setVisible(false);
-          navigation.navigate('HomeScreen', { imageUri: response.assets[0].uri });
+          navigation.navigate('HomeScreen', {imageUri: response.assets[0].uri});
         }
-      }
+      },
     );
   };
 
@@ -87,17 +113,17 @@ const ProductsScreen: React.FC<ProductScreen> = ({ navigation }) => {
         maxWidth: 600,
         maxHeight: 600,
       },
-      (response) => {
+      response => {
         if (response.didCancel) {
           console.log('User canceled image picker');
         } else if (response.errorCode) {
           console.error('ImagePicker Error:', response.errorMessage);
         } else if (response.assets && response.assets.length > 0) {
           setVisible(false);
-          navigation.navigate('HomeScreen', { imageUri: response.assets[0].uri });
+          navigation.navigate(HomeSc, {imageUri: response.assets[0].uri});
         }
-      }
-    )
+      },
+    );
   };
 
   return (
@@ -130,7 +156,7 @@ const ProductsScreen: React.FC<ProductScreen> = ({ navigation }) => {
                 size={25}
               />
             </View>
-            <View style={{ alignSelf: 'center', marginHorizontal: 'auto' }}>
+            <View style={{alignSelf: 'center', marginHorizontal: 'auto'}}>
               <Text style={styles.txtscan}>Use AI to Scan your Product</Text>
             </View>
             <View style={styles.frwdbtn}>
@@ -148,23 +174,23 @@ const ProductsScreen: React.FC<ProductScreen> = ({ navigation }) => {
                 <Animated.View
                   style={[
                     styles.modalview,
-                    { transform: [{ translateY: slideAnim }] },
+                    {transform: [{translateY: slideAnim}]},
                   ]}>
                   <View style={styles.modalbox}>
                     <TouchableOpacity
-                      style={[styles.btncamera, { marginBottom: vs(15) }]}
+                      style={[styles.btncamera, {marginBottom: vs(15)}]}
                       onPress={() => {
-                        pickImage()
-                      }}
-                    >
+                        requestCameraPermission();
+                      }}>
                       <Text style={styles.txtmodal}>Use Camera</Text>
                       <Image source={images.camera} style={styles.imgcamera} />
                     </TouchableOpacity>
 
                     <TouchableOpacity
                       style={styles.btncamera}
-                      onPress={() => { PickeImageFromGallery() }}
-                    >
+                      onPress={() => {
+                        PickeImageFromGallery();
+                      }}>
                       <Text style={styles.txtmodal}>Pick From Gallery</Text>
                       <Image source={images.gallery} style={styles.imgcamera} />
                     </TouchableOpacity>
@@ -177,7 +203,7 @@ const ProductsScreen: React.FC<ProductScreen> = ({ navigation }) => {
           <View style={styles.prodcutlistview}>
             <View style={styles.titlebox}>
               <Text style={styles.producttitle}>Recent Products</Text>
-              <TouchableOpacity style={{ flexDirection: 'row' }}>
+              <TouchableOpacity style={{flexDirection: 'row'}}>
                 <Text style={styles.txtviewmore}>View more</Text>
                 <Image source={images.rightarrow} style={styles.rightarrow} />
               </TouchableOpacity>
@@ -189,7 +215,7 @@ const ProductsScreen: React.FC<ProductScreen> = ({ navigation }) => {
                     source={images.tshirt}
                     style={[
                       styles.productimg,
-                      { height: index % 2 !== 0 ? vs(160) : vs(95) },
+                      {height: index % 2 !== 0 ? vs(160) : vs(95)},
                     ]}
                   />
                   <View style={styles.productnamebox}>

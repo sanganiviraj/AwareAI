@@ -6,4 +6,8 @@ export const Colors = {
   grey587: '#58718C',
   greyBEC: '#BEC7D1',
   blue325: '#325276',
+  red: '#9B0000',
+  pitch: '#F7C6C6',
+  green: '#009B12',
+  lightgreen: '#C6F7CC',
 };
