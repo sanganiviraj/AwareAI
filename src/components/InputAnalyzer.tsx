@@ -1,7 +1,7 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
 import { TextInput } from 'react-native-gesture-handler';
-import { horizontalScale, screen } from '../constant/Metrics';
+import { horizontalScale } from '../constant/Metrics';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { fonts } from '../constant/common/Fonts';
 import { Colors } from '../constant/common/Colors';
